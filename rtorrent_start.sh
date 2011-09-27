@@ -36,10 +36,27 @@ function rtorrent_stop {
 
 }
 
-for i in $IMPORTANT_ADDRESS; do 
-    if ping_command $i ; then 
+function check_live_hosts {
+    for i in $IMPORTANT_ADDRESS; do 
+        if ping_command $i ; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+function check_ssh {
+    if [ -n "$(ps aux|grep ssh|grep sshd:|grep -v grep)" ]; then return 0; fi
+    return 1
+}
+
+function main {
+    # If of each is true we stopped rtorrent. Else we start it )
+    if check_live_hosts || check_ssh ; then
         rtorrent_stop
-        exit 0
+    else
+        rtorrent_start
     fi
-    rtorrent_start
-done
+}
+
+main

@@ -18,7 +18,7 @@ function rtorrent_status {
 
 function rtorrent_start {
     if [ "$(rtorrent_status)" = "down" ]; then
-        rtorrent &>/dev/null &
+        screen -d -m -S rtorrent rtorrent &> /dev/null
         echo "start rtorrent"
     else
         echo "rtorrent already started"

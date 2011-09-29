@@ -3,7 +3,7 @@
 LOCAL_IP="192.168.1.3 192.168.1.4"
 LOCAL_DEST="192.168.1.2:~/torrents"
 REMOTE_DEST="buzzja.mine.nu:~/torrents"
-LOCAL_TORRENT_SOURCE="$HOME/Downloads/"
+LOCAL_TORRENT_SOURCE="$HOME/Downloads"
 
 # Return a string with all ips accept localhost ip
 function show_ips {
@@ -23,11 +23,33 @@ function which_net {
     echo "external"
 }
 
-# Simple copy torrent file to destination. If all good we delete local torrent files
-function copy_torrent {
-    scp $LOCAL_TORRENT_SOURCE/*.torrent $1 && rm $LOCAL_TORRENT_SOURCE/*.torrent
+# I think use find better that ls
+function torrent_list {
+    echo "$(find $LOCAL_TORRENT_SOURCE -iname '*.torrent' -type f)"
 }
 
+# Check if we have any torrent file
+function torrent_available {
+    if [ -n "$(torrent_list)" ]; then
+        echo "yes"
+    else
+        echo "not"
+    fi
+}
+
+# Simple copy torrent file to destination. If all good we delete local torrent files
+function copy_torrent {
+    if [ "$(torrent_available)" == "yes" ]; then
+        for torrent_file in `torrent_list`; do
+            echo "$(date) copy $torrent_file to $1"
+            scp "$torrent_file" $1 && rm "$torrent_file"
+        done
+    else
+        echo "$(date) I not found any torrents"
+    fi
+}
+
+# Main function. If we on the home network use local destinations
 function main {
     if [ "$(which_net)" == "home" ]; then
         copy_torrent $LOCAL_DEST

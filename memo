@@ -1,0 +1,4 @@
+#!/bin/sh
+
+NANO_OPTIONS="--boldtext --tabstospaces --nonewlines --mouse -w -c"
+urxvtc -e nano $NANO_OPTIONS "$(mktemp)"

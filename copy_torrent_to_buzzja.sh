@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh -x
 
 LOCAL_IP="192.168.1.3 192.168.1.4"
 LOCAL_DEST="192.168.1.2:~/torrents"
@@ -40,8 +40,8 @@ function torrent_available {
 # Simple copy torrent file to destination. If all good we delete local torrent files
 function copy_torrent {
     if [ "$(torrent_available)" == "yes" ]; then
-        for torrent_file in `torrent_list`; do
-            echo "$(date) copy $torrent_file to $1"
+        for torrent_file in torrent_list; do
+            echo "$(date) copy \"$torrent_file\" to $1"
             scp "$torrent_file" $1 && rm "$torrent_file"
         done
     else

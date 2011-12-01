@@ -40,10 +40,7 @@ function torrent_available {
 # Simple copy torrent file to destination. If all good we delete local torrent files
 function copy_torrent {
     if [ "$(torrent_available)" == "yes" ]; then
-        for torrent_file in torrent_list; do
-            echo "$(date) copy \"$torrent_file\" to $1"
-            scp "$torrent_file" $1 && rm "$torrent_file"
-        done
+        scp $LOCAL_TORRENT_SOURCE/*.torrent $1 && rm $LOCAL_TORRENT_SOURCE/*.torrent
     else
         echo "$(date) I not found any torrents"
     fi

@@ -1,6 +1,4 @@
 #!/bin/sh
-# This is simple stop and start rtorrent script for crontab
-# If one of IMPORTANT_ADDRESS is live, we stop rtorrent, else start
 
 IMPORTANT_ADDRESS="192.168.1.3 192.168.1.4"
 
@@ -8,33 +6,6 @@ function ping_command(){
     ping -c 2 -w 2 "$1" -q &>/dev/null
 }
 
-function rtorrent_status {
-    if [ "$(pidof rtorrent)" ]; then
-        echo "up"
-    else
-        echo "down"
-    fi
-}
-
-function rtorrent_start {
-    if [ "$(rtorrent_status)" = "down" ]; then
-        screen -d -m -S rtorrent rtorrent &> /dev/null
-        echo "start rtorrent"
-    else
-        echo "rtorrent already started"
-    fi
-}
-
-function rtorrent_stop {
-    if [ "$(rtorrent_status)" = "down" ]; then
-        echo "Rtorrent already down"
-    else
-        killall rtorrent
-        sleep 10
-        if [ "$(rtorrent_status)" = "up" ]; then killall -9 rtorrent; fi
-    fi
-
-}
 
 function check_live_hosts {
     for i in $IMPORTANT_ADDRESS; do 
@@ -53,9 +24,11 @@ function check_ssh {
 function main {
     # If of each is true we stopped rtorrent. Else we start it )
     if check_live_hosts || check_ssh ; then
-        rtorrent_stop
+	transmission-remote -U -D
+	echo "Unlimite torrent $(date)"
     else
-        rtorrent_start
+	transmission-remote -u 0 -d 0
+	echo "Limited torrent $(date)"
     fi
 }
 

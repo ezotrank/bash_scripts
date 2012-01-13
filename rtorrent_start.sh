@@ -24,15 +24,15 @@ function check_ssh {
 function main {
     # If of each is true we stopped rtorrent. Else we start it )
     if check_live_hosts || check_ssh ; then
-	sudo /etc/init.d/transmission-daemon start
-	sleep 10
-	transmission-remote -u 0 -d 0
-	echo "Start and limited torrent $(date)"
-    else
-	transmission-remote -U -D
 	sudo /etc/init.d/transmission-daemon stop
 	sleep 10
-	echo "Stop and unlimite torrent $(date)"
+	transmission-remote -u 0 -d 0
+	echo "Stop and limited torrent $(date)"
+    else
+	sudo /etc/init.d/transmission-daemon start
+	sleep 10
+	transmission-remote -U -D
+	echo "Start and unlimite torrent $(date)"
     fi
 }
 

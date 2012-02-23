@@ -1,14 +1,15 @@
-#!/bin/sh -x
+#!/bin/bash
 
-NANO_OPTIONS="--boldtext --tabstospaces --nonewlines --mouse -w -c"
+# NANO_OPTIONS="--boldtext --tabstospaces --nonewlines --mouse -w -c"
 TMP_FILE="$(mktemp)"
-EVALEXIT="(progn (setq kill-emacs-hook 'nil) (kill-emacs) (scroll-bar-mode 0)"
+# EVALEXIT="(progn (setq kill-emacs-hook 'nil) (kill-emacs) (scroll-bar-mode 0)"
 
-nano_ext(){
-    urxvtc -e nano $NANO_OPTIONS $TMP_FILE
-}
+# nano_ext(){
+#     urxvtc -e nano $NANO_OPTIONS $TMP_FILE
+# }
 
 # if [ ! `emacsclient -c -e $EVALEXIT -n $TMP_FILE &>/dev/null` ]; then
 #     `nano_ext`
 # fi
-emacsclient -c -n $TMP_FILE
+# emacsclient-emacs-24 -c -n $TMP_FILE
+gedit --name="Memo" --new-document $TMP_FILE

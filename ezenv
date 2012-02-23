@@ -4,7 +4,7 @@ function open_work_screen(){
     urxvtc -name "Work" +sb -e screen -R work -c ~/.screenrc_1
 }
 
-MY_PROGRAMM="dropbox pidgin skype evolution odeskteam-qt4"
+MY_PROGRAMM="odeskteam-qt4 pidgin skype evolution dropbox"
 for programm in $MY_PROGRAMM; do
     if [ -n "$(ps aux|grep $programm|grep -v grep)" ]; then
         echo "$programm already started"

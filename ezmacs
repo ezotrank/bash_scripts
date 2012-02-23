@@ -6,6 +6,7 @@ PROJECT_DIR=$DEV_DIR/.project_dir
 function add(){
     pwd=`pwd`
     name=$(basename $pwd)
+    if [ ! -e $PROJECT_DIR ]; then touch $PROJECT_DIR; fi
     if [[ $(grep "^$name " $PROJECT_DIR) ]]; then
 	echo "This dir `pwd` already exists, but I can raplace path"
 	sed -i.bak "/^$name .*/d" $PROJECT_DIR
@@ -34,4 +35,3 @@ case "$1" in
 	emacs --title EmacsDev --chdir `get_path $1` &>/dev/null &
 	;;
 esac
-

@@ -8,9 +8,10 @@
 IMPORTANT_ADDRESS="192.168.1.3 192.168.1.4 192.168.1.5"
 TRANS_REMOTE="/usr/bin/transmission-remote"
 DEFAULT_OPT="-ne"
+LOCK_FILE="/tmp/transmission-stop.lock"
 
 # Ping command
-function ping_command(){
+function ping_command() {
     ping -c 2 -w 2 "$1" -q &>/dev/null
 }
 
@@ -30,15 +31,44 @@ function check_ssh {
     return 1
 }
 
-function main {
-    # If of each is true we stopped rtorrent. Else we start it )
+# Create lock file and start torrents
+function force_start {
+    touch $LOCK_FILE
+    $TRANS_REMOTE $DEFAULT_OPT --torrent all --start
+    echo "Force start all torrents $(date)"
+}
+
+# Simple remove lock file
+function force_stop {
+    rm $LOCK_FILE
+    echo "Remove lock file"
+}
+
+function regular_start {
+    if [[ -e $LOCK_FILE ]]; then
+        echo "Lock file is exist. Nothing do"
+        exit 0
+    fi
     if check_live_hosts || check_ssh; then
-	$TRANS_REMOTE $DEFAULT_OPT --torrent all --stop
-	echo "Stop all torrents $(date)"
+        $TRANS_REMOTE $DEFAULT_OPT --torrent all --stop
+        echo "Stop all torrents $(date)"
     else
-	$TRANS_REMOTE $DEFAULT_OPT --torrent all --start
-	echo "Start all torrents $(date)"
+        $TRANS_REMOTE $DEFAULT_OPT --torrent all --start
+        echo "Start all torrents $(date)"
     fi
 }
 
-main
+case "$1" in
+        force_start)
+            force_start
+            ;;
+         
+        force_stop)
+            force_stop
+            ;;
+         
+        *)
+            regular_start
+            ;;
+ 
+esac

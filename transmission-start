@@ -35,12 +35,14 @@ function check_ssh {
 function force_start {
     touch $LOCK_FILE
     $TRANS_REMOTE $DEFAULT_OPT --torrent all --start
+    $TRANS_REMOTE $DEFAULT_OPT -p 51444
     echo "Force start all torrents $(date)"
 }
 
 # Simple remove lock file
 function force_stop {
     rm $LOCK_FILE
+    $TRANS_REMOTE $DEFAULT_OPT -p 51413
     echo "Remove lock file"
 }
 

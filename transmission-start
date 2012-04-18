@@ -34,8 +34,8 @@ function check_ssh {
 # Create lock file and start torrents
 function force_start {
     touch $LOCK_FILE
-    $TRANS_REMOTE $DEFAULT_OPT --torrent all --start
     $TRANS_REMOTE $DEFAULT_OPT -p 51444
+    $TRANS_REMOTE $DEFAULT_OPT --torrent all --start
     echo "Force start all torrents $(date)"
 }
 
